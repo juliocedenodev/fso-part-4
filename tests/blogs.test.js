@@ -41,15 +41,15 @@ test('blogs are returned as json', async () => {
   })
   
   test('all blogs are returned', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await helper.blogsInDb()
   
-    expect(response.body).toHaveLength(helper.initialBlogs.length)
+    expect(response).toHaveLength(helper.initialBlogs.length)
   })
 
   test('all ids are defined correctly', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await helper.blogsInDb()
   
-    response.body.forEach(blog => {
+    response.forEach(blog => {
         expect(blog.id).toBeDefined();
       });
   })
@@ -71,11 +71,11 @@ describe('adding a blog post', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
     
-      const response = await api.get('/api/blogs')
+      const response = await helper.blogsInDb()
     
-      const author = response.body.map(r => r.author)
+      const author = response.map(r => r.author)
     
-      expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+      expect(response).toHaveLength(helper.initialBlogs.length + 1)
       expect(author).toContain(
         'Julio'
       )
@@ -93,9 +93,9 @@ describe('adding a blog post', () => {
         .send(newBlog)
         .expect(400)
     
-      const response = await api.get('/api/blogs')
+      const response = await helper.blogsInDb()
     
-      expect(response.body).toHaveLength(helper.initialBlogs.length)
+      expect(response).toHaveLength(helper.initialBlogs.length)
     })
   
   
@@ -113,11 +113,11 @@ describe('adding a blog post', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
     
-      const response = await api.get('/api/blogs')
+      const response = await helper.blogsInDb()
     
-      const likes = response.body.map(r => r.likes)
+      const likes = response.map(r => r.likes)
     
-      expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+      expect(response).toHaveLength(helper.initialBlogs.length + 1)
       expect(likes).toContain(0)
     })
 
@@ -134,26 +134,26 @@ describe('adding a blog post', () => {
         .send(newBlog)
         .expect(401)
     
-      const response = await api.get('/api/blogs')
+      const response = await helper.blogsInDb()
     
-      expect(response.body).toHaveLength(helper.initialBlogs.length)
+      expect(response).toHaveLength(helper.initialBlogs.length)
     })
 })
 
 describe('deletion of a blog post', () => {
   test('succeeds with status code 204 if id is valid', async () =>{
-  const blogsAtStart = await api.get('/api/blogs');
-  const blogToDelete = blogsAtStart.body[0];
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
 
   await api
   .delete(`/api/blogs/${blogToDelete.id}`)
   .set('Authorization', `Bearer ${token}`)
   .expect(204);
 
-  const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(helper.initialBlogs.length - 1);
+  const response = await helper.blogsInDb();
+  expect(response).toHaveLength(helper.initialBlogs.length - 1);
 
-  const title = response.body.map(r => r.title);
+  const title = response.map(r => r.title);
   expect(title).not.toContain(blogToDelete.title);
 
   })
@@ -162,9 +162,10 @@ describe('deletion of a blog post', () => {
 describe('update of a blog post', () => {
   test('succeeds with status code 200 if id is valid', async () =>
   {
-  const blogsAtStart = await api.get('/api/blogs');
-  const blogToUpdate = blogsAtStart.body[0];
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
   const updateBlog = {
+    ...blogToUpdate,
     likes: 4
   }
 
@@ -174,10 +175,10 @@ describe('update of a blog post', () => {
   .expect(200)
   .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(helper.initialBlogs.length);
+  const response = await helper.blogsInDb();
+  expect(response).toHaveLength(helper.initialBlogs.length);
 
-  const likes = response.body.map(r => r.likes)
+  const likes = response.map(r => r.likes)
   expect(likes).toContain(updateBlog.likes);
   })
 })

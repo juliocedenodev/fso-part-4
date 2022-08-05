@@ -1,0 +1,30 @@
+POST http://127.0.0.1:3003/api/blogs/
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyZDYwYTZlOWY4ZDRhYjE0ZDkyNTVhNyIsImlhdCI6MTY1OTU3OTg1N30.MaCMJEOECRFcsJnOlT4D8Iod81BWn6i8-obx0bu3EEI
+
+{
+        "title": "React patterns",
+        "author": "Michael Chan",
+        "url": "https://reactpatterns.com/",
+        "likes": 7
+} 
+####################
+POST http://127.0.0.1:3003/api/login/
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "salainen"
+
+}
+
+#############
+GET http://127.0.0.1:3003/api/blogs/
+
+##################
+DELETE http://127.0.0.1:3003/api/blogs/62eb2e09297c7a57fedc4711
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYyZDYwYTZlOWY4ZDRhYjE0ZDkyNTVhNyIsImlhdCI6MTY1OTU3OTg1N30.MaCMJEOECRFcsJnOlT4D8Iod81BWn6i8-obx0bu3EEI
+
+#############
+GET http://127.0.0.1:3003/api/users/
